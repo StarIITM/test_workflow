@@ -1,7 +1,7 @@
 name: Test Action with Log
 
 on:
-  workflow_dispatch:  # allows manual triggering
+  workflow_dispatch:  # manual trigger
 
 jobs:
   test:
@@ -13,12 +13,15 @@ jobs:
 
       - name: 23f2003378@ds.study.iitm.ac.in
         run: |
-          echo "Hello, world!" >> action-log.txt
+          # Create file if it doesn't exist
+          touch action-log.txt
+          echo "$(date): Hello, world!" >> action-log.txt
 
-      - name: Commit log
+      - name: Commit log safely
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add action-log.txt
-          git commit -m "Update action log [skip ci]" || exit 0
+          # Only commit if there are changes
+          git diff --cached --quiet || git commit -m "Update action log [skip ci]"
           git push
