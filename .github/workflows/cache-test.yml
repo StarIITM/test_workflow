@@ -1,4 +1,4 @@
-name: Dependency Cache Test
+name: Test Cache Workflow
 
 on:
   workflow_dispatch:  # manual trigger
@@ -14,16 +14,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
-
       - name: Prime cache
         id: prime-cache-b5aa670
         uses: actions/cache@v4
         with:
-          path: ~/.cache/pip
+          path: cache-test-folder
           key: cache-b5aa670
           restore-keys: |
             cache-b5aa670
@@ -36,6 +31,7 @@ jobs:
             echo "Cache miss!"
           fi
 
-      - name: Install dependencies
+      - name: Create dummy file
         run: |
-          pip install -r requirements.txt
+          mkdir -p cache-test-folder
+          echo "$(date)" >> cache-test-folder/log.txt
