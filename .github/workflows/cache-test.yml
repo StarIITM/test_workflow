@@ -1,0 +1,38 @@
+name: Dependency Cache Test
+
+on:
+  workflow_dispatch:  # allows manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prime cache
+        id: prime-cache-b5aa670
+        uses: actions/cache@v4
+        with:
+          path: node_modules # change to your dependency folder (e.g., pip cache: ~/.cache/pip)
+          key: cache-b5aa670
+          restore-keys: |
+            cache-b5aa670
+
+      - name: Show cache result
+        run: |
+          if [ -n "${{ steps.prime-cache-b5aa670.outputs.cache-hit }}" ]; then
+            echo "Cache hit!"
+          else
+            echo "Cache miss!"
+          fi
+
+      - name: Install dependencies
+        run: |
+          # Example for Node.js project
+          npm install
+          # Or Python example: pip install -r requirements.txt
