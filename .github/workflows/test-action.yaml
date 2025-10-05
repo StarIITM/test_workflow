@@ -1,0 +1,24 @@
+name: Test Action with Log
+
+on:
+  workflow_dispatch:  # allows manual triggering
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 23f2003378@ds.study.iitm.ac.in
+        run: |
+          echo "Hello, world!" >> action-log.txt
+
+      - name: Commit log
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add action-log.txt
+          git commit -m "Update action log [skip ci]" || exit 0
+          git push
